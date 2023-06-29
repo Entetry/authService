@@ -1,10 +1,10 @@
 package service
 
 import (
-	"authService/internal/config"
-	"authService/internal/model"
 	"context"
 	"errors"
+	"github.com/Entetry/authService/internal/config"
+	"github.com/Entetry/authService/internal/model"
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"

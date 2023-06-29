@@ -1,10 +1,11 @@
+// Package handler contains grpc endpoints
 package handler
 
 import (
-	"authService/internal/service"
-	"authService/protocol/authService"
 	"context"
 	"errors"
+	"github.com/Entetry/authService/internal/service"
+	"github.com/Entetry/authService/protocol/authService"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

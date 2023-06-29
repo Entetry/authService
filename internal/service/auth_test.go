@@ -1,10 +1,10 @@
 package service
 
 import (
-	"authService/internal/config"
-	"authService/internal/model"
-	"authService/internal/service/mocks"
 	"context"
+	"github.com/Entetry/authService/internal/config"
+	"github.com/Entetry/authService/internal/model"
+	"github.com/Entetry/authService/internal/service/mocks"
 	"github.com/stretchr/testify/mock"
 	"testing"
 	"time"

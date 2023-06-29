@@ -1,4 +1,4 @@
-module authService
+module github.com/Entetry/authService
 
 go 1.19
 

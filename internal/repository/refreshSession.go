@@ -1,14 +1,14 @@
+// Package repository contains cache access methods
 package repository
 
 import (
-	"authService/internal/model"
+	"github.com/Entetry/authService/internal/model"
 	"sync"
 )
 
-// RefreshSession Refresh Session service struct
+// RefreshSessionStorage RefreshSession Refresh Session service struct
 type RefreshSessionStorage struct {
 	refreshTokenStorage *sync.Map
-	mu                  sync.RWMutex
 }
 
 // NewRefreshSessionStorage creates new Refresh Session service
@@ -36,6 +36,7 @@ func (r *RefreshSessionStorage) Delete(username string) {
 	r.refreshTokenStorage.Delete(username)
 }
 
+// Load gets refresh session and removes it from cash
 func (r *RefreshSessionStorage) Load(username string) (*model.Session, bool) {
 	session, ok := r.refreshTokenStorage.Load(username)
 	if !ok {

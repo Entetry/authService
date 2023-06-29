@@ -1,13 +1,13 @@
 package main
 
 import (
-	"authService/internal/config"
-	"authService/internal/handler"
-	"authService/internal/repository"
-	"authService/internal/service"
-	"authService/protocol/authService"
 	"context"
 	"fmt"
+	"github.com/Entetry/authService/internal/config"
+	"github.com/Entetry/authService/internal/handler"
+	"github.com/Entetry/authService/internal/repository"
+	"github.com/Entetry/authService/internal/service"
+	"github.com/Entetry/authService/protocol/authService"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"net"

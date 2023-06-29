@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"authService/internal/model"
+	"github.com/Entetry/authService/internal/model"
 	"github.com/stretchr/testify/assert"
 	"sync"
 	"testing"
