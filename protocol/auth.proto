@@ -1,0 +1,36 @@
+syntax = "proto3";
+option go_package = "./authService";
+
+package proto;
+
+service AuthGRPCService {
+  rpc ValidateTokens(ValidateTokensRequest) returns (ValidateTokensResponse);
+  rpc GenerateTokens(GenerateTokensRequest) returns(GenerateTokensResponse);
+  rpc RefreshTokens(RefreshTokensRequest) returns(RefreshTokensResponse);
+}
+
+message ValidateTokensRequest{
+  string accessToken = 1;
+}
+
+message ValidateTokensResponse{}
+
+message GenerateTokensRequest{
+  string username = 1;
+  string password = 2;
+}
+
+message GenerateTokensResponse{
+  string accessToken = 1 ;
+  string refreshToken = 2 ;
+}
+
+message RefreshTokensRequest{
+  string refreshToken = 1 ;
+  string username = 2;
+}
+
+message RefreshTokensResponse{
+  string accessToken = 1 ;
+  string refreshToken = 2 ;
+}

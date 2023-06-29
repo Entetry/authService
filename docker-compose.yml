@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    depends_on:
+      - redis
+    build: ./
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    networks:
+      - mynetwork
+    restart: on-failure
+    env_file:
+      - .env
+    environment:
+      - APP_PORT=${APP_PORT}
+      - CONNECTION_STRING=${CONNECTION_STRING}
+      - REDIS_HOST=redis
+  redis:
+    image: "redis:7-alpine"
+    hostname: redis
+    ports:
+      - "6379:6379"
+    command: sh -c "redis-server --appendonly yes"
+    volumes:
+      - my-data:/data/redis
+    networks:
+      - mynetwork
+volumes:
+  my-data:
+    name: my-data
+
+networks:
+  mynetwork:
+    driver: bridge
