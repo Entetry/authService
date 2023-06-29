@@ -31,7 +31,7 @@ var (
 
 func TestAuth_GenerateTokens(t *testing.T) {
 	mockSessionStorage := mocks.NewSessionStorage(t)
-	auth := NewAuthService(&cfg, mockSessionStorage)
+	auth := NewAuthService(&cfg, mockSessionStorage, nil)
 	mockSessionStorage.On("SaveSession", mock.AnythingOfType("*model.Session")).Return()
 	refreshToken, accessToken, err := auth.GenerateTokens(context.Background(), mockUsername)
 
@@ -42,7 +42,7 @@ func TestAuth_GenerateTokens(t *testing.T) {
 
 func TestAuth_RefreshTokens(t *testing.T) {
 	mockSessionStorage := mocks.NewSessionStorage(t)
-	auth := NewAuthService(&cfg, mockSessionStorage)
+	auth := NewAuthService(&cfg, mockSessionStorage, nil)
 
 	mockSessionStorage.On("LoadAndDelete", mockUsername).Return(&session, true)
 	mockSessionStorage.On("SaveSession", mock.AnythingOfType("*model.Session"))
@@ -57,7 +57,7 @@ func TestAuth_RefreshTokens(t *testing.T) {
 
 func TestAuth_RefreshTokens_ExpiredRefreshToken(t *testing.T) {
 	mockSessionStorage := mocks.NewSessionStorage(t)
-	auth := NewAuthService(&cfg, mockSessionStorage)
+	auth := NewAuthService(&cfg, mockSessionStorage, nil)
 	expiredSession := model.Session{
 		RefreshToken: mockRefreshToken,
 		Username:     mockUsername,

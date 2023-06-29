@@ -4,4 +4,4 @@ compose-down:
 	docker-compose down
 
 proto:
-	protoc --proto_path=protocol protocol/*.proto --go_out=./protocol --go-grpc_out=./protocol --govalidators_out=./protocol
+	protoc --proto_path=protocol protocol/*.proto --go_out=./protocol --go-grpc_out=./protocol

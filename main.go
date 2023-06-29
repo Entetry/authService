@@ -8,8 +8,10 @@ import (
 	"github.com/Entetry/authService/internal/repository"
 	"github.com/Entetry/authService/internal/service"
 	"github.com/Entetry/authService/protocol/authService"
+	"github.com/Entetry/userService/protocol/userService"
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"net"
 	"os"
 	"os/signal"
@@ -30,9 +32,23 @@ func main() {
 	defer cancel()
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGTERM)
+	userConn, err := grpc.Dial(cfg.UserEndpoint,
+		grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		log.Panicf("Couldn't connect to quote service: %v", err)
+	}
+	userServiceClient := userService.NewUserServiceClient(userConn)
+	defer func() {
+		err = userConn.Close()
+		if err != nil {
+			log.Errorf("Main / userConn.Close() / \n %v", err)
+			return
+		}
+	}()
+
 	sessionStorage := repository.NewRefreshSessionStorage(&sync.Map{})
-	tokenService := service.NewAuthService(jwtCfg, sessionStorage)
-	authHandler := handler.NewAuth(tokenService)
+	authSvc := service.NewAuthService(jwtCfg, sessionStorage, userServiceClient)
+	authHandler := handler.NewAuth(authSvc)
 	grpcServer := grpc.NewServer()
 	authService.RegisterAuthGRPCServiceServer(grpcServer, authHandler)
 	go func() {

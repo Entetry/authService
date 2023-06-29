@@ -7,7 +7,8 @@ import (
 
 // Config Main application config
 type Config struct {
-	Port int `env:"APP_PORT" envDefault:"22800"`
+	Port         int    `env:"APP_PORT" envDefault:"22800"`
+	UserEndpoint string `env:"USER_ENDPOINT"`
 }
 
 // New Creates Config object
