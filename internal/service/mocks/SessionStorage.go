@@ -3,8 +3,7 @@
 package mocks
 
 import (
-	model "authService/internal/model"
-
+	"github.com/Entetry/authService/internal/model"
 	mock "github.com/stretchr/testify/mock"
 )
 

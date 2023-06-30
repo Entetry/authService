@@ -14,12 +14,18 @@ import (
 )
 
 var (
-	ErrRefreshTokenIsExpired        = errors.New("refresh token is expired")
-	ErrRefreshTokenNotFound         = errors.New("refresh token not found")
-	ErrRefreshTokenMismatch         = errors.New("refresh token mismatch")
+	// ErrRefreshTokenIsExpired godoc
+	ErrRefreshTokenIsExpired = errors.New("refresh token is expired")
+	// ErrRefreshTokenNotFound godoc
+	ErrRefreshTokenNotFound = errors.New("refresh token not found")
+	// ErrRefreshTokenMismatch godoc
+	ErrRefreshTokenMismatch = errors.New("refresh token mismatch")
+	// ErrUnexpectedTokenSigningMethod godoc
 	ErrUnexpectedTokenSigningMethod = errors.New("unexpected token signing method")
-	ErrInvalidTokenClaims           = errors.New("invalid token claims")
-	ErrInvalidPassword              = errors.New("invalid token claims")
+	// ErrInvalidTokenClaims godoc
+	ErrInvalidTokenClaims = errors.New("invalid token claims")
+	// ErrInvalidPassword godoc
+	ErrInvalidPassword = errors.New("invalid token claims")
 )
 
 // SessionStorage used to store sessions
@@ -65,14 +71,14 @@ func (a *Auth) SignIn(ctx context.Context, username, pwd string) (refreshToken s
 		Username: username,
 	})
 	if err != nil {
-		log.Error("Auth / SignIn /GetByUsername err %w ", err)
+		log.Errorf("Auth / SignIn /GetByUsername err %v ", err)
 		return "", "", err
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(user.PasswordHash), []byte(pwd))
 	if errors.Is(err, bcrypt.ErrMismatchedHashAndPassword) {
 		return "", "", ErrInvalidPassword
 	} else if err != nil {
-		log.Errorf("SignIn / CompareHashAndPassword / error %w", err)
+		log.Errorf("SignIn / CompareHashAndPassword / error %v", err)
 		return "", "", err
 	}
 
