@@ -32,10 +32,12 @@ func main() {
 	defer cancel()
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGTERM)
+	log.Info(cfg.UserEndpoint)
+
 	userConn, err := grpc.Dial(cfg.UserEndpoint,
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Panicf("Couldn't connect to quote service: %v", err)
+		log.Panicf("Couldn't connect to user service: %v", err)
 	}
 	userServiceClient := userService.NewUserServiceClient(userConn)
 	defer func() {

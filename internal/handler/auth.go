@@ -75,15 +75,14 @@ func (a *Auth) SignUp(ctx context.Context, request *authService.SignUpRequest) (
 }
 
 // SignIn sign in
-func (a *Auth) SignIn(ctx context.Context, request *authService.GenerateTokensRequest) (*authService.GenerateTokensResponse, error) {
+func (a *Auth) SignIn(ctx context.Context, request *authService.SignInRequest) (*authService.SignInResponse, error) {
 	refreshToken, accessToken, err := a.auth.SignIn(ctx, request.Username, request.Password)
 	if errors.Is(err, service.ErrInvalidPassword) {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	} else if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
-
-	return &authService.GenerateTokensResponse{
+	return &authService.SignInResponse{
 		AccessToken:  accessToken,
 		RefreshToken: refreshToken,
 	}, nil

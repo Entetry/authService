@@ -14,7 +14,7 @@ FROM alpine:latest
 
 WORKDIR /
 
-COPY --from=build /company /
+COPY --from=build /authService /
 
 EXPOSE ${APP_PORT}
 
