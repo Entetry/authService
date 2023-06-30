@@ -2,34 +2,28 @@ package service
 
 import (
 	"context"
+	"testing"
+	"time"
+
 	"github.com/Entetry/authService/internal/config"
 	"github.com/Entetry/authService/internal/model"
 	"github.com/Entetry/authService/internal/service/mocks"
 	"github.com/stretchr/testify/mock"
-	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 )
 
-var (
+const (
 	mockAccessTokenKey = "mock-access-token-key"
 	mockRefreshToken   = "mock-refresh-token"
 	mockUsername       = "test_user"
-	mockExpiresAt      = time.Now().Add(24 * time.Hour).Unix()
-	session            = model.Session{
-		RefreshToken: mockRefreshToken,
-		Username:     mockUsername,
-		ExpiresAt:    mockExpiresAt,
-	}
-	cfg = config.JwtConfig{
-		AccessTokenKey:         mockAccessTokenKey,
-		AccessTokenExpiration:  30 * time.Minute,
-		RefreshTokenExpiration: 24 * time.Hour,
-	}
 )
 
 func TestAuth_GenerateTokens(t *testing.T) {
+	cfg := config.JwtConfig{
+		AccessTokenKey:         mockAccessTokenKey,
+		AccessTokenExpiration:  30 * time.Minute,
+		RefreshTokenExpiration: 24 * time.Hour}
 	mockSessionStorage := mocks.NewSessionStorage(t)
 	auth := NewAuthService(&cfg, mockSessionStorage, nil)
 	mockSessionStorage.On("SaveSession", mock.AnythingOfType("*model.Session")).Return()
@@ -41,6 +35,16 @@ func TestAuth_GenerateTokens(t *testing.T) {
 }
 
 func TestAuth_RefreshTokens(t *testing.T) {
+	mockExpiresAt := time.Now().Add(24 * time.Hour).Unix()
+	session := model.Session{
+		RefreshToken: mockRefreshToken,
+		Username:     mockUsername,
+		ExpiresAt:    mockExpiresAt,
+	}
+	cfg := config.JwtConfig{
+		AccessTokenKey:         mockAccessTokenKey,
+		AccessTokenExpiration:  30 * time.Minute,
+		RefreshTokenExpiration: 24 * time.Hour}
 	mockSessionStorage := mocks.NewSessionStorage(t)
 	auth := NewAuthService(&cfg, mockSessionStorage, nil)
 
@@ -56,6 +60,10 @@ func TestAuth_RefreshTokens(t *testing.T) {
 }
 
 func TestAuth_RefreshTokens_ExpiredRefreshToken(t *testing.T) {
+	cfg := config.JwtConfig{
+		AccessTokenKey:         mockAccessTokenKey,
+		AccessTokenExpiration:  30 * time.Minute,
+		RefreshTokenExpiration: 24 * time.Hour}
 	mockSessionStorage := mocks.NewSessionStorage(t)
 	auth := NewAuthService(&cfg, mockSessionStorage, nil)
 	expiredSession := model.Session{

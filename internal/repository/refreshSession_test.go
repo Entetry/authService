@@ -1,20 +1,21 @@
 package repository
 
 import (
-	"github.com/Entetry/authService/internal/model"
-	"github.com/stretchr/testify/assert"
 	"sync"
 	"testing"
+
+	"github.com/Entetry/authService/internal/model"
+	"github.com/stretchr/testify/assert"
 )
 
-var (
+const (
 	mockRefreshToken = "example_refresh_token"
 	mockUsername     = "test"
-	mockExpiresAt    = int64(2280000)
 )
 
 // TestLoadAndDelete tests the LoadAndDelete method
 func TestLoadAndDelete(t *testing.T) {
+	mockExpiresAt := int64(2280000)
 	storage := &sync.Map{}
 	session := &model.Session{
 		RefreshToken: mockRefreshToken,
@@ -40,6 +41,7 @@ func TestLoadAndDelete(t *testing.T) {
 
 // TestSaveSession tests the SaveSession method
 func TestSaveSession(t *testing.T) {
+	mockExpiresAt := int64(2280000)
 	storage := &sync.Map{}
 	session := &model.Session{
 		RefreshToken: mockRefreshToken,
@@ -54,13 +56,14 @@ func TestSaveSession(t *testing.T) {
 	refreshSession.SaveSession(session)
 
 	t.Log(" Verify that the session is stored in the storage")
-	storedSession, loaded := storage.Load(mockRefreshToken)
+	storedSession, loaded := storage.Load(mockUsername)
 	assert.True(t, loaded, "Session was not stored in the storage")
 	assert.Equal(t, session, storedSession, "Stored session mismatch")
 }
 
 // TestDelete tests the Delete method
 func TestDelete(t *testing.T) {
+	mockExpiresAt := int64(2280000)
 	storage := &sync.Map{}
 	session := &model.Session{
 		RefreshToken: mockRefreshToken,

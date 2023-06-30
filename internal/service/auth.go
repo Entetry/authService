@@ -1,8 +1,11 @@
+// Package service contains services
 package service
 
 import (
 	"context"
 	"errors"
+	"time"
+
 	"github.com/Entetry/authService/internal/config"
 	"github.com/Entetry/authService/internal/model"
 	"github.com/Entetry/userService/protocol/userService"
@@ -10,7 +13,6 @@ import (
 	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
-	"time"
 )
 
 var (
@@ -66,7 +68,7 @@ func (a *Auth) SignUp(ctx context.Context, username, pwd, email string) error {
 }
 
 // SignIn sign in user
-func (a *Auth) SignIn(ctx context.Context, username, pwd string) (refreshToken string, accessToken string, err error) {
+func (a *Auth) SignIn(ctx context.Context, username, pwd string) (refreshToken, accessToken string, err error) {
 	user, err := a.userServiceClient.GetByUsername(ctx, &userService.GetByUsernameRequest{
 		Username: username,
 	})
@@ -112,7 +114,7 @@ func (a *Auth) ValidateToken(accessToken string) error {
 }
 
 // GenerateTokens generate token
-func (a *Auth) GenerateTokens(ctx context.Context, username string) (refreshToken, accessToken string, err error) {
+func (a *Auth) GenerateTokens(_ context.Context, username string) (refreshToken, accessToken string, err error) {
 	refreshToken = uuid.New().String()
 	a.sessionStorage.SaveSession(&model.Session{
 		RefreshToken: refreshToken,

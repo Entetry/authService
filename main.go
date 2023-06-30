@@ -1,8 +1,15 @@
+// Package main contains cache access methods
 package main
 
 import (
 	"context"
 	"fmt"
+	"net"
+	"os"
+	"os/signal"
+	"sync"
+	"syscall"
+
 	"github.com/Entetry/authService/internal/config"
 	"github.com/Entetry/authService/internal/handler"
 	"github.com/Entetry/authService/internal/repository"
@@ -12,11 +19,6 @@ import (
 	log "github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"net"
-	"os"
-	"os/signal"
-	"sync"
-	"syscall"
 )
 
 func main() {
@@ -64,9 +66,11 @@ func main() {
 	log.Info("grpc Server started on ", cfg.Port)
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", cfg.Port))
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
+		return
 	}
-	if err := grpcServer.Serve(listener); err != nil {
-		log.Fatalf("failed to serve: %v", err)
+	if err = grpcServer.Serve(listener); err != nil {
+		log.Errorf("failed to serve: %v", err)
+		return
 	}
 }

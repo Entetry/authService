@@ -2,8 +2,9 @@
 package repository
 
 import (
-	"github.com/Entetry/authService/internal/model"
 	"sync"
+
+	"github.com/Entetry/authService/internal/model"
 )
 
 // RefreshSessionStorage RefreshSession Refresh Session service struct
@@ -26,7 +27,7 @@ func (r *RefreshSessionStorage) LoadAndDelete(username string) (*model.Session, 
 	return session.(*model.Session), ok
 }
 
-// SaveSession save refresh session to db( delete all sessions if user has >5 sessions)
+// SaveSession save refresh session to db
 func (r *RefreshSessionStorage) SaveSession(session *model.Session) {
 	r.refreshTokenStorage.Store(session.Username, session)
 }

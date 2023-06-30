@@ -4,6 +4,7 @@ package handler
 import (
 	"context"
 	"errors"
+
 	"github.com/Entetry/authService/internal/service"
 	"github.com/Entetry/authService/protocol/authService"
 	log "github.com/sirupsen/logrus"
@@ -23,7 +24,7 @@ func NewAuth(auth *service.Auth) *Auth {
 }
 
 // ValidateTokens validate jwt tokens endpoint
-func (a *Auth) ValidateTokens(ctx context.Context, request *authService.ValidateTokensRequest) (*authService.ValidateTokensResponse, error) {
+func (a *Auth) ValidateTokens(_ context.Context, request *authService.ValidateTokensRequest) (*authService.ValidateTokensResponse, error) {
 	err := a.auth.ValidateToken(request.AccessToken)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
@@ -35,11 +36,12 @@ func (a *Auth) ValidateTokens(ctx context.Context, request *authService.Validate
 // RefreshTokens Refresh update tokens
 func (a *Auth) RefreshTokens(ctx context.Context, request *authService.RefreshTokensRequest) (*authService.RefreshTokensResponse, error) {
 	refreshToken, accessToken, err := a.auth.RefreshTokens(ctx, request.RefreshToken, request.Username)
-	if errors.Is(err, service.ErrRefreshTokenNotFound) {
+	switch {
+	case errors.Is(err, service.ErrRefreshTokenNotFound):
 		return nil, status.Error(codes.NotFound, err.Error())
-	} else if errors.Is(err, service.ErrRefreshTokenMismatch) || errors.Is(err, service.ErrRefreshTokenIsExpired) {
+	case errors.Is(err, service.ErrRefreshTokenMismatch) || errors.Is(err, service.ErrRefreshTokenIsExpired):
 		return nil, status.Error(codes.InvalidArgument, err.Error())
-	} else if err != nil {
+	case err != nil:
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
